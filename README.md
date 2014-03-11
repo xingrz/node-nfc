@@ -56,6 +56,11 @@ Optionally you can pass a `callback` as an listener for the
 [`'detect'`](#event-detect) event.
 
 
+### nfcid.version()
+
+Get which version of libnfc the module compiled with.
+
+
 ### Class: nfcid.Nfc
 
 The Nfc Class.
@@ -81,11 +86,6 @@ Stop polling and detach all listeners, so that the process could safely exit.
 You can also pass a `callback` as an listener for the [`'close'`](#event-close)
 event, which would be emitted once the polling is fully ended. After this
 event is emitted all listeners would be detached.
-
-
-#### nfc.version()
-
-Get which version of libnfc the module compiled with.
 
 
 #### Event: 'listenning'

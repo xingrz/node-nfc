@@ -1,13 +1,9 @@
-var NFC = require(__dirname + '/build/Release/nfc').NFC;
-var events = require('events');
+var NfcId = require('./lib/nfcid')
 
-inherits(NFC, events.EventEmitter);
+module.exports = NfcId
 
-exports.nfc = NFC;
-
-// extend prototype
-function inherits(target, source) {
-    for (var k in source.prototype) {
-        target.prototype[k] = source.prototype[k];
-    }
-}
+// alias
+module.exports.Nfc = NfcId
+module.exports.NfcId = NfcId
+module.exports.Libnfc = NfcId
+module.exports.libnfc = NfcId

@@ -1,20 +1,29 @@
 {
-  "name": "nfc",
-  "version": "0.0.4",
-  "description": "Node NFC functionallity through libnfc",
+  "name": "nfcid",
+  "version": "1.0.0",
+  "description": "A Node.js binding of libnfc that detects card UIDs",
   "main": "index.js",
+  "gypfile": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "install": "node-gyp rebuild"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Camme/node-nfc.git"
+    "url": "git://github.com/xingrz/node-nfcid.git"
+  },
+  "engine": {
+    "node": ">= 0.10"
   },
   "keywords": [
-    "nfc"
+    "nfc",
+    "libnfc",
+    "rfid",
+    "acr122"
   ],
-  "author": "Camilo Tapia <camilo.tapia@gmail.com>",
+  "author": "XiNGRZ <chenxingyu92@gmail.com>",
   "license": "MIT",
-  "gypfile": true
+  "bugs": {
+    "url": "https://github.com/xingrz/node-nfcid/issues"
+  },
+  "homepage": "https://github.com/xingrz/node-nfcid"
 }

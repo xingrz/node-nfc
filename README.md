@@ -1,64 +1,147 @@
-node-nfc
+node-nfcid
 ========
 
-A first try at binding libnfc to node. This project is right now not good enough to use. It is also my first real C++ module so dont use it in production. Feel free to contribute.
-
-## Current release
-This version only exposes an event that is triggered when a NFC tag is on the reader.
-
-If you still want to try it, here is how it works:
+A Node.js binding of [libnfc][1] that detects card UIDs.
 
 
-    var nfc = require('nfc').nfc;
-    var n = new nfc();
-
-    n.on('uid', function(uid) {
-        console.log('UID:', uid);
-    });
-
-    n.start();
-    
 ## Installation
 
-To install it, use npm:
+First of all, you may have [libnfc][1] installed. Check out [here][2] for
+introduction.
 
-    npm install nfc
-    
-Or to compile it yourself, make sure you have node-gyp
+After that, you may install this module using `npm install`:
 
-    node-gyp configure
-    node-gyp build
+```
+$ npm install libnfc
+```
+
 
 ## Prerequisites
 
-In order to use the module you need to install libnfc and libusb. Read more about [libnfc here](http://nfc-tools.org/index.php?title=Libnfc)
+* node (>= 0.10.X)
+* [libnfc][1] (>= 1.7.X)
+* libusb
+* Compatible card reader with driver installed (e.g. ACR122U with _libasccid_)
 
-## Installation errors
-Here is a list of possible issues that might come up on installation:
 
-- If you, when installing with npm, get an **error of a missing nfc.h**, it means that libnfc isnt installed correctly.
+## Quick Start
 
-## License 
+```js
+require('nfcid')(function (uid) {
+  console.log('nfc uid detect: %s', uid)
+}).listen()
+```
 
-(The MIT License)
 
-Copyright (c) 2011 Camilo Tapia &lt;camilo.tapia@gmail.com&gt;
+## API Doc
 
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-'Software'), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
+### nfcid([callback])
 
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
+Shortcut for initializing and starting an instance, returns an
+[Nfc](#class-libnfcnfc) instance, which is an instance of
+[`events.EventEmitter`][3].
 
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Equals to following code:
+
+```js
+var nfcid = require('nfcid')
+
+var nfc = new nfcid()
+nfc.on('detect', function (uid) {
+  // ...
+})
+```
+
+Optionally you can pass a `callback` as an listener for the
+[`'detect'`](#event-detect) event.
+
+
+### Class: nfcid.Nfc
+
+The Nfc Class.
+
+
+#### new nfcid.Nfc()
+
+Construct a new Nfc instance.
+
+
+#### nfc.listen([callback])
+
+Start polling for card.
+
+You can also pass a `callback` as an listener for the
+[`'listenning'`](#event-listenning) event.
+
+
+#### nfc.close([callback])
+
+Stop polling and detach all listeners, so that the process could safely exit.
+
+You can also pass a `callback` as an listener for the [`'close'`](#event-close)
+event, which would be emitted once the polling is fully ended. After this
+event is emitted all listeners would be detached.
+
+
+#### nfc.version()
+
+Get which version of libnfc the module compiled with.
+
+
+#### Event: 'listenning'
+
+Emitted when the polling process is successfully started and listenning for
+cards.
+
+
+#### Event: 'detect'
+
+* `uid` String - the unique ID of the card detected.
+
+Emitted when a compatible card is placed to the reader and detected.
+
+
+#### Event: 'remove'
+
+Emitted when the card is removed from the reader.
+
+
+#### Event: 'error'
+
+* `err` Error
+
+Emitted when an error occurs. The [`'close'`](#event-close) event will be
+called directly following this event.
+
+
+#### Event: 'close'
+
+* `hadError` Boolean - `true` if the polling process is ended due to an error.
+
+Emitted once the polling process is fully ended. After this event is emitted
+all listeners would be detached so that the process could safely exit.
+
+
+## Credit
+
+Thanks to the [original binding][4] from cammo Tapia and a Node.js 0.10.X
+[patch][5] from LambdaDriver.
+
+
+## Hacking
+
+Please feel free to make patches or ask through [New Issue][6].
+
+
+## License
+
+This module is available under the terms of the [MIT License][7].
+
+
+[1]: https://code.google.com/p/libnfc/
+[2]: http://nfc-tools.org/index.php?title=Libnfc
+[3]: http://nodejs.org/api/events.html#events_class_events_eventemitter
+[4]: https://github.com/camme/node-nfc
+[5]: https://github.com/LambdaDriver/node-nfc
+[6]: https://github.com/xingrz/node-nfcid/issues/new
+[7]: https://github.com/xingrz/node-nfcid/blob/master/LICENSE
